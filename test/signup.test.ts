@@ -14,7 +14,7 @@ test("Should create a passenger", async () => {
         isPassenger: true,
     }
     const responseSingup = await signup(input);
-    expect(responseSingup.accountId).toBeDefined()
+    expect(responseSingup.accountID).toBeDefined()
 });
 
 test("Should create a driver", async () => {
@@ -27,7 +27,7 @@ test("Should create a driver", async () => {
         isDriver: true,
     }
     const responseSingup = await signup(input);
-    expect(responseSingup.accountId).toBeDefined()
+    expect(responseSingup.accountID).toBeDefined()
 });
 
 test("should not create a passanger or driver with invalid CPF", async () => {
@@ -38,8 +38,9 @@ test("should not create a passanger or driver with invalid CPF", async () => {
         password: '123456',
         isPassenger: true,
     }
-    const responseSingup = await signup(input);
-    expect(responseSingup).toBe(-1);
+    await expect(() => {
+        return signup(input)
+    }).rejects.toThrowError('Invalid CPF');
 });
 
 test("should not create a passanger with invalid email", async () => {
@@ -50,8 +51,9 @@ test("should not create a passanger with invalid email", async () => {
         password: '123456',
         isPassenger: true,
     }
-    const responseSingup = await signup(input);
-    expect(responseSingup).toBe(-2);
+    await expect(() => {
+        return signup(input)
+    }).rejects.toThrowError('Invalid Email');
 });
 
 
@@ -63,8 +65,9 @@ test("should not create a passanger with invalid name", async () => {
         password: '123456',
         isPassenger: true,
     }
-    const responseSingup = await signup(input);
-    expect(responseSingup).toBe(-3);
+    await expect(() => {
+        return signup(input)
+    }).rejects.toThrowError('Invalid Name');
 });
 
 test("should not create a passanger or drive if email already exists", async () => {
@@ -76,8 +79,9 @@ test("should not create a passanger or drive if email already exists", async () 
         isPassenger: true,
     }
     await signup(input);
-    const responseSingup = await signup(input);
-    expect(responseSingup).toBe(-4);
+    await expect(() => {
+        return signup(input)
+    }).rejects.toThrowError('Account already exists');
 });
 
 test("should not create a drive if invalid car plate", async () => {
@@ -89,6 +93,8 @@ test("should not create a drive if invalid car plate", async () => {
         carPlate: 'AB12345',
         isDriver: true,
     }
-    const responseSingup = await signup(input);
-    expect(responseSingup).toBe(-5);
+
+    await expect(() => {
+        return signup(input)
+    }).rejects.toThrowError('Invalid Car Plate');
 });
